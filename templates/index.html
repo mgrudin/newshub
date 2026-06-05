@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>NewsHUB</title>
+  </head>
+  <body>
+    <h1>NewsHUB</h1>
+    <ul id="source">
+      {% for source in sources %}
+      <li>{{source.title}} - {{ source.url }}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
