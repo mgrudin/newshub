@@ -5,10 +5,16 @@
   </head>
   <body>
     <h1>NewsHUB</h1>
-    {% for source in sources %}
+    <form action="/source" method="post">
+      <input type="text" name="url" placeholder="Add source..." />
+      <button type="submit">Add</button>
+    </form>
+    {% if error %}
+    <p style="color: red">{{ error }}</p>
+    {% endif %} {% for source in sources %}
     <h2>{{source.title}} - {{ source.url }}</h2>
     <ul id="articles">
-      {% for article in articles %}
+      {% for article in source.articles %}
       <li>{{ article.title }}</li>
       {% endfor %}
     </ul>
