@@ -5,10 +5,13 @@
   </head>
   <body>
     <h1>NewsHUB</h1>
-    <ul id="source">
-      {% for source in sources %}
-      <li>{{source.title}} - {{ source.url }}</li>
+    {% for source in sources %}
+    <h2>{{source.title}} - {{ source.url }}</h2>
+    <ul id="articles">
+      {% for article in articles %}
+      <li>{{ article.title }}</li>
       {% endfor %}
     </ul>
+    {% endfor %}
   </body>
 </html>
