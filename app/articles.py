@@ -49,3 +49,13 @@ def add_article(source, entry) -> Article:
         source=source,
     )
     return article
+
+
+def poll_all_sources():
+    with SessionLocal() as session:
+        sources = session.scalars(select(Source)).all()
+        for source in sources:
+            try:
+                fetch_source(source.id)
+            except Exception as e:
+                print(f"Failed to poll source {source.title}: {e}")

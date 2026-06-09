@@ -1,22 +1,35 @@
+from contextlib import asynccontextmanager
+from datetime import datetime
 from typing import Annotated
 from urllib.parse import quote
 
+from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from app.articles import fetch_source
+from app.articles import fetch_source, poll_all_sources
 from app.db import SessionLocal
-from app.models import Article, Source
+from app.models import Source
 from app.sources import add_source
 
 templates = Jinja2Templates(directory="templates")
 
-app = FastAPI()
-sources = []
-articles = []
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(
+        poll_all_sources, "interval", minutes=20, next_run_time=datetime.now()
+    )
+    scheduler.start()
+    yield
+    scheduler.shutdown()
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/", response_class=HTMLResponse)
