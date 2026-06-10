@@ -10,6 +10,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
+from app.ai import summarize_and_save
 from app.articles import fetch_source, poll_all_sources
 from app.db import SessionLocal
 from app.models import Source
@@ -52,4 +53,9 @@ def create_source(url: Annotated[str, Form()]):
     except ValueError as e:
         return RedirectResponse(url=f"/?error={quote(str(e))}", status_code=303)
     fetch_source(source.id)
+    return RedirectResponse(url="/", status_code=303)
+
+@app.post("/articles/{article_id}/summarize")
+def summarize_article_endpoint(article_id: int):
+    summarize_and_save(article_id)
     return RedirectResponse(url="/", status_code=303)

@@ -11,11 +11,21 @@
     </form>
     {% if error %}
     <p style="color: red">{{ error }}</p>
-    {% endif %} {% for source in sources %}
+    {% endif %}
+    {% for source in sources %}
     <h2>{{source.title}} - {{ source.url }}</h2>
     <ul id="articles">
       {% for article in source.articles %}
-      <li>{{ article.title }}</li>
+      <details>
+        <summary>{{ article.title }}</summary>
+        {% if article.summary %}
+        <p>{{ article.summary }}</p>
+        {% else %}
+        <form action="/articles/{{ article.id }}/summarize" method="post">
+          <button type="submit">Generate summary</button>
+        </form>
+        {% endif %}
+      </details>
       {% endfor %}
     </ul>
     {% endfor %}
