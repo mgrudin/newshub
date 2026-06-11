@@ -52,7 +52,6 @@ def add_article(source, entry) -> Article:
 
 
 def poll_all_sources():
-    print("Poll all sources")
     with SessionLocal() as session:
         sources = session.scalars(select(Source)).all()
         for source in sources:
